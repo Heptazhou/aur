@@ -1,0 +1,30 @@
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */2 * * *"
+
+jobs:
+  conda-zsh-completion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/conda-zsh-completion.git
+          source_branch: master
+          destination_branch: conda-zsh-completion
+          github_token: ${{ secrets.PAT }}
+  locale-mul_zz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/locale-mul_zz.git
+          source_branch: master
+          destination_branch: locale-mul_zz
+          github_token: ${{ secrets.PAT }}
