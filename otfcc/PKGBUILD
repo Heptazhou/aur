@@ -1,0 +1,31 @@
+# Maintainer: Heptazhou <heptazhou at icloud dot com>
+# Contributor: Pau Ruiz Safont <unduthegun@gmail.com>
+
+pkgname=otfcc
+pkgver=0.10.5
+pkgrel=1
+pkgdesc="C library and utility for parsing and writing OpenType font files"
+arch=("i686" "x86_64")
+url="https://github.com/Heptazhou/otfcc"
+license=("APACHE")
+makedepends=("premake>=5")
+source=("$pkgname-v$pkgver.tar.gz::https://github.com/Heptazhou/$pkgname/archive/v$pkgver.tar.gz")
+sha256sums=("ce9047e8c64b13ae7a4ee9c6206fdddfb7a1104e27f0082d48f435d628b5305d")
+
+package() {
+	cd -- "$srcdir/$pkgname-$pkgver"
+	cd "bin"/release-x*
+	install -Dm755 -t "$pkgdir/usr/bin" "otfccbuild" "otfccdump"
+}
+
+build() {
+	cd -- "$srcdir/$pkgname-$pkgver"
+	premake5 gmake
+	cd build/gmake
+	if [ "$CARCH" = "i686" ]; then
+		make config=release_x86
+	fi
+	if [ "$CARCH" = "x86_64" ]; then
+		make config=release_x64
+	fi
+}

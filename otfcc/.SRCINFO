@@ -1,0 +1,13 @@
+pkgbase = otfcc
+	pkgdesc = C library and utility for parsing and writing OpenType font files
+	pkgver = 0.10.5
+	pkgrel = 1
+	url = https://github.com/Heptazhou/otfcc
+	arch = i686
+	arch = x86_64
+	license = APACHE
+	makedepends = premake>=5
+	source = otfcc-v0.10.5.tar.gz::https://github.com/Heptazhou/otfcc/archive/v0.10.5.tar.gz
+	sha256sums = ce9047e8c64b13ae7a4ee9c6206fdddfb7a1104e27f0082d48f435d628b5305d
+
+pkgname = otfcc
