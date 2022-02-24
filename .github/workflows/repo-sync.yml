@@ -16,6 +16,18 @@ jobs:
           source_branch: master
           destination_branch: conda-zsh-completion
           github_token: ${{ secrets.PAT }}
+  glibc-linux4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/glibc-linux4.git
+          source_branch: master
+          destination_branch: glibc-linux4
+          github_token: ${{ secrets.PAT }}
   locale-mul_zz:
     runs-on: ubuntu-latest
     steps:
