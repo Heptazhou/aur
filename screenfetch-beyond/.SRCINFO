@@ -1,0 +1,20 @@
+pkgbase = screenfetch-beyond
+	pkgdesc = CLI bash script to show system/theme info in screenshots
+	pkgver = 3.9.1
+	pkgrel = 1
+	url = https://github.com/Heptazhou/screenfetch
+	arch = any
+	license = AGPL
+	depends = bash
+	depends = xorg-xdpyinfo
+	depends = xorg-xprop
+	optdepends = scrot: To take screenshot
+	provides = screenfetch-beyond
+	provides = screenfetch
+	conflicts = screenfetch
+	source = screenfetch::https://raw.github.com/Heptazhou/screenfetch/master/screenfetch-dev
+	source = screenfetch.1::https://raw.github.com/Heptazhou/screenfetch/master/screenfetch.1
+	sha256sums = SKIP
+	sha256sums = SKIP
+
+pkgname = screenfetch-beyond

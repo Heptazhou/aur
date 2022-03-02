@@ -1,0 +1,22 @@
+# Maintainer: Heptazhou <zhou at 0h7z dot com>
+
+pkgname=screenfetch-beyond
+pkgname_=screenfetch
+pkgver=3.9.1
+pkgrel=1
+pkgdesc="CLI bash script to show system/theme info in screenshots"
+arch=("any")
+url="https://github.com/Heptazhou/$pkgname_"
+url_="https://raw.github.com/Heptazhou/$pkgname_/master"
+license=("AGPL")
+provides=($pkgname $pkgname_)
+conflicts=($pkgname_)
+depends=("bash" "xorg-xdpyinfo" "xorg-xprop")
+optdepends=("scrot: To take screenshot")
+source=("screenfetch::$url_/screenfetch-dev" "screenfetch.1::$url_/screenfetch.1")
+sha256sums=("SKIP" "SKIP")
+
+package() {
+	install -Dm755 -t "$pkgdir/usr/bin/" "screenfetch"
+	install -Dm644 -t "$pkgdir/usr/share/man/man1/" "screenfetch.1"
+}
