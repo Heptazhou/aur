@@ -3,11 +3,11 @@
 pkgname=screenfetch-beyond
 pkgname_=screenfetch
 pkgver=3.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="CLI bash script to show system/theme info in screenshots"
 arch=("any")
 url="https://github.com/Heptazhou/$pkgname_"
-url_="https://raw.github.com/Heptazhou/$pkgname_/master"
+url_="$url/raw/master"
 license=("AGPL")
 provides=($pkgname $pkgname_)
 conflicts=($pkgname_)
