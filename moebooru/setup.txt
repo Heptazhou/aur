@@ -1,0 +1,47 @@
+
+sudo -iu postgres
+initdb -D /var/lib/postgres/data
+exit
+
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
+sudo systemctl status postgresql
+
+sudo -iu postgres
+createuser --interactive
+> Enter name of role to add: moebooru
+> Shall the new role be a superuser? (y/n) y
+psql
+# \password moebooru
+# \q
+createdb moebooru
+exit
+
+sudo useradd -m moebooru
+sudo -iu moebooru
+git clone https://github.com/0h7z/moebooru.git ~/live
+cd ~/live
+
+mkdir -p public/data/{avatars,frame,frame-preview,image,inline,jpeg,preview,sample,search}
+cp config/database.yml.example config/database.yml
+cp config/local_config.rb.example config/local_config.rb
+nano config/database.yml
+nano config/init_config.rb
+nano config/local_config.rb
+
+bundle config set --local path "vendor/bundle"
+bundle i
+bundle e rake secret
+nano config/local_config.rb
+
+bundle e rake db:create
+bundle e rake db:reset
+bundle e rake db:migrate
+bundle e rake i18n:js:export
+bundle e rake assets:precompile
+exit
+
+sudo systemctl enable moebooru
+sudo systemctl start moebooru
+sudo systemctl status moebooru
+

@@ -1,0 +1,32 @@
+# Maintainer: Heptazhou <zhou at 0h7z dot com>
+
+pkgname=moebooru
+pkgver=6.0.0
+pkgrel=1
+pkgdesc="An image board"
+arch=("any")
+url="https://github.com/0h7z/moebooru"
+license=("AGPL")
+depends=(
+	"git"
+	"imagemagick"
+	"jhead"
+	"nodejs>=16"
+	"pnpm"
+	"postgresql>=13"
+	"ruby-bundler>=2.3"
+	"ruby>=3"
+)
+optdepends=(
+	"nginx"
+	"nodejs-lts-gallium"
+	"postgresql14"
+	"postgresql15"
+)
+provides=("$pkgname")
+source=("$pkgname.service")
+sha256sums=("83fd2adf2f7fb8e603732edb28fe206de5d5f315001d7f045fb4ebfb44950c49")
+
+package() {
+	install -Dm644 -t "$pkgdir/usr/lib/systemd/system" "$pkgname.service"
+}

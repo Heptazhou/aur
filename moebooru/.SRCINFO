@@ -1,0 +1,24 @@
+pkgbase = moebooru
+	pkgdesc = An image board
+	pkgver = 6.0.0
+	pkgrel = 1
+	url = https://github.com/0h7z/moebooru
+	arch = any
+	license = AGPL
+	depends = git
+	depends = imagemagick
+	depends = jhead
+	depends = nodejs>=16
+	depends = pnpm
+	depends = postgresql>=13
+	depends = ruby-bundler>=2.3
+	depends = ruby>=3
+	optdepends = nginx
+	optdepends = nodejs-lts-gallium
+	optdepends = postgresql14
+	optdepends = postgresql15
+	provides = moebooru
+	source = moebooru.service
+	sha256sums = 83fd2adf2f7fb8e603732edb28fe206de5d5f315001d7f045fb4ebfb44950c49
+
+pkgname = moebooru

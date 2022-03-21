@@ -1,0 +1,36 @@
+# Maintainer: Heptazhou <zhou at 0h7z dot com>
+# Contributor: Jonne Haß <me@jhass.eu>
+# Contributor: Hyacinthe Cartiaux <hyacinthe.cartiaux@free.fr>
+# Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
+# Contributor: Alexsandr Pavlov <kidoz at mail dot ru>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+
+pkgname=ruby-bundler
+pkgver=2.3.9
+pkgrel=1
+pkgname_="${pkgname#ruby-}-$pkgver"
+pkgdesc="Manages an application's dependencies through its entire life, across many machines, systematically and repeatably"
+arch=("any")
+url="https://bundler.io/"
+license=("MIT")
+depends=("ruby")
+makedepends=("ruby-rdoc")
+options=("!emptydirs")
+noextract=("$pkgname_.gem")
+source=("https://rubygems.org/downloads/$pkgname_.gem")
+sha256sums=("55988ab920cfdec4a805750f70f9b01d1fc66d9b38ecd205f99957b474995b38")
+
+package() {
+	cd -- "$srcdir"
+	local pkgdir_="$(ruby -e'puts Gem.default_dir')"
+	HOME="/tmp" GEM_HOME="$pkgdir_" GEM_PATH="$pkgdir_" \
+		gem install --no-user-install --ignore-dependencies -i "$pkgdir/$pkgdir_" -n "$pkgdir/usr/bin" "$pkgname_.gem"
+
+	cd -- "$pkgdir/$pkgdir_/gems/$pkgname_"
+	install -Dm644 -t "$pkgdir/usr/share/man/man1/" "lib/bundler/man/"*.1
+	install -Dm644 -t "$pkgdir/usr/share/man/man5/" "lib/bundler/man/"*.5
+
+	rm "../../cache/$pkgname_.gem"
+	rm "lib/bundler/man/"*.{1,5}
+	rm "LICENSE.md"
+}

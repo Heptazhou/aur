@@ -1,0 +1,16 @@
+[Unit]
+Description=An image board
+After=network.target syslog.target
+
+[Service]
+Type=simple
+User=moebooru
+SyslogLevel=notice
+
+WorkingDirectory=/home/moebooru/live
+ExecStart=bundle exec unicorn
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
