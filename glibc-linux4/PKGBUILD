@@ -9,8 +9,8 @@
 
 pkgbase=glibc-linux4
 pkgname=(glibc-linux4 lib32-glibc-linux4)
-pkgver=2.35
-pkgrel=2
+pkgver=2.36
+pkgrel=1
 arch=(x86_64)
 url="https://www.gnu.org/software/libc/"
 license=(GPL LGPL)
@@ -34,8 +34,8 @@ validpgpkeys=(
 )
 sha256sums=(
 	#
-	"5123732f6b67ccd319305efd399971d58592122bcc2a6518a1bd2510dd0cf52e" "SKIP"
-	"640450afbcb4a0951e56e89d1d8d384e09589032ef32605c08d9894311dda852"
+	"1c959fea240906226062cb4b1e7ebce71a9f0e3c0836c09e7e3423d434fcfe75" "SKIP"
+	"69573c1c4eee6216f4f345647aed938d13994bf19a7e3a6ba9ed8bab85f23bef"
 	"fbd57987ca24d71305eda9e0dd76143b422118e12f76b2b0d555f86763e14cd2"
 	"83f108f915863c7ed0338e2d3e8f2e071a531a090ef8f8b2eb3a956a3c4f04d7"
 	"c27424154a6096ae32c0824b785e05de6acef33d9224fd6147d1936be9b4962b"
@@ -50,7 +50,7 @@ prepare() {
 	cd glibc
 
 	# compatibility with linux 4.x hosts
-	patch -Np1 < "$srcdir"/glibc-linux4.patch
+	# patch -Np1 < "$srcdir"/glibc-linux4.patch
 }
 
 build() {
@@ -80,7 +80,6 @@ build() {
 	CFLAGS=${CFLAGS/,-D_FORTIFY_SOURCE=2/} # after https://github.com/archlinux/svntogit-packages/commit/a790c38
 	CFLAGS=${CFLAGS/-Wp /}
 
-	#
 	CFLAGS=${CFLAGS/-fno-plt/}
 	CXXFLAGS=${CXXFLAGS/-fno-plt/}
 	LDFLAGS=${LDFLAGS/,-z,now/}
@@ -143,7 +142,8 @@ check() {
 	sed -i '/FORTIFY/d' configparms
 
 	# some failures are "expected"
-	make check || true
+	# make check || \ #
+	true
 }
 
 package_glibc-linux4() {
