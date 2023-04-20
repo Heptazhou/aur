@@ -10,6 +10,7 @@ url="https://github.com/Heptazhou/$pkgname_"
 url_="$url/raw/master"
 license=("AGPL")
 provides=("$pkgname" "$pkgname_")
+replaces=("$pkgname_")
 conflicts=("$pkgname_")
 depends=("bash" "xorg-xdpyinfo" "xorg-xprop")
 optdepends=("scrot: To take screenshot")
