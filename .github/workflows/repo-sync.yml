@@ -7,7 +7,7 @@ jobs:
   conda-zsh-completion:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - uses: repo-sync/github-sync@v2.3.0
@@ -19,7 +19,7 @@ jobs:
   glibc-linux4:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - uses: repo-sync/github-sync@v2.3.0
@@ -28,10 +28,22 @@ jobs:
           source_branch: master
           destination_branch: glibc-linux4
           github_token: ${{ secrets.PAT }}
+  iraf-bin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/iraf-bin.git
+          source_branch: master
+          destination_branch: iraf-bin
+          github_token: ${{ secrets.PAT }}
   locale-mul_zz:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - uses: repo-sync/github-sync@v2.3.0
@@ -39,4 +51,16 @@ jobs:
           source_repo: https://aur.archlinux.org/locale-mul_zz.git
           source_branch: master
           destination_branch: locale-mul_zz
+          github_token: ${{ secrets.PAT }}
+  xgterm-bin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/xgterm-bin.git
+          source_branch: master
+          destination_branch: xgterm-bin
           github_token: ${{ secrets.PAT }}
