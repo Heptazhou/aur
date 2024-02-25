@@ -3,7 +3,7 @@ Operation = Install
 Operation = Upgrade
 Type = Package
 Target = julia
-Target = libcurl-julia
+Target = libcurl-julia-bin
 
 [Action]
 Exec = /bin/sh -c 'cd /lib/julia && rm -f libcurl.so && ln -s    libcurl.so.4 libcurl.so'

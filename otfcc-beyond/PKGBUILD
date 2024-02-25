@@ -13,8 +13,8 @@ source=("$pkgname-v$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 sha256sums=("ce9047e8c64b13ae7a4ee9c6206fdddfb7a1104e27f0082d48f435d628b5305d")
 
 package() {
-	cd -- "$srcdir/$pkgname-$pkgver/bin/"release-x*
-	install -Dm755 -t "$pkgdir/usr/bin" "otfccbuild" "otfccdump"
+	cd -- "$srcdir/$pkgname-$pkgver/bin/release-x"*
+	install -Dm755 -t "$pkgdir/usr/bin/" "$pkgname"{build,dump}
 }
 
 build() {
