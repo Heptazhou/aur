@@ -1,4 +1,5 @@
 
 * -linguist-vendored linguist-detectable
 *.h linguist-language=C
+*.hook linguist-language=INI
 *.patch linguist-vendored
