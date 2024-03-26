@@ -1,5 +1,5 @@
 on:
-  workflow_dispatch:
+  workflow_dispatch: ~
   schedule:
     - cron: "0 */4 * * *"
 
@@ -63,6 +63,30 @@ jobs:
           source_repo: https://aur.archlinux.org/locale-mul_zz.git
           source_branch: master
           destination_branch: locale-mul_zz
+          github_token: ${{ secrets.PAT }}
+  mingw-w64-zlib:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/mingw-w64-zlib.git
+          source_branch: master
+          destination_branch: mingw-w64-zlib
+          github_token: ${{ secrets.PAT }}
+  nsis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/nsis.git
+          source_branch: master
+          destination_branch: nsis
           github_token: ${{ secrets.PAT }}
   xgterm-bin:
     runs-on: ubuntu-latest
