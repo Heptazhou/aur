@@ -46,12 +46,36 @@ const JOB_SYNC(pkgbase::String) = ODict(
 	S"runs-on" => S"ubuntu-latest",
 	S"steps"   => [ACT_CHECKOUT(), ACT_SYNC(pkgbase)],
 )
+const MAKEPKG(pkgbases::Vector{String}) = ODict(
+	S"makepkg" => ODict(
+		S"container" => S"archlinux:base-devel",
+		S"runs-on" => S"ubuntu-latest",
+		S"steps" => [
+			ACT_CHECKOUT.(sort(pkgbases));
+			S"run" .=> [
+				S"pacman-key --init"
+				S"pacman -Syu --noconfirm dbus-daemon-units"
+				"""
+				makepkg -V
+				sed -re 's/$(s"\b(EUID) == 0\b/\1 < 0")/g' -i /bin/\
+				makepkg"""
+				map(pkgbase -> strip("""
+				cd $pkgbase
+				makepkg -si --noconfirm
+				mv -vt .. *.pkg.tar.zst
+				"""), pkgbases)
+				S"ls -lav *.pkg.tar.zst"
+			]
+			ACT_ARTIFACT("*.pkg.tar.zst")
+		],
+	),
+)
 
 write(".github/workflows/repo-sync.yml",
 	yaml(
 		S"on" => ODict(
 			S"workflow_dispatch" => nothing,
-			S"schedule"          => [ODict(S"cron" => "0 */4 * * *")],
+			S"schedule" => [ODict(S"cron" => "0 */4 * * *")],
 		),
 		S"jobs" => ODict([
 			Symbol(x) => JOB_SYNC(x) for x ∈ [
@@ -69,35 +93,16 @@ write(".github/workflows/repo-sync.yml",
 )
 
 # https://aur.archlinux.org/packages/nsis
-v = ["mingw-w64-zlib", "nsis"]
 write(".github/workflows/make-nsis.yml",
 	yaml(
 		S"on" => ODict(
 			S"workflow_dispatch" => nothing,
+			S"push" => ODict(S"branches" => ["nsis"]),
 		),
-		S"jobs" => ODict(
-			S"make" => ODict(
-				S"container" => S"archlinux:base-devel",
-				S"runs-on" => S"ubuntu-latest",
-				S"steps" => [
-					ACT_CHECKOUT.(v);
-					S"run" => "pacman-key --init"
-					S"run" => "pacman -Syu --noconfirm"
-					S"run" => strip(
-						"""
-						makepkg -V
-						sed -ri 's/(EUID) == 0/\\1 < 0/g' /bin/makepkg
-						""" * mapreduce(pkg -> """
-						cd $pkg
-						makepkg -si --noconfirm
-						mv -vt .. *.pkg.tar.zst
-						cd ..
-						""", *, v),
-					)
-					ACT_ARTIFACT("*.pkg.tar.zst")
-				],
-			),
-		),
+		S"jobs" => MAKEPKG([
+			"mingw-w64-zlib"
+			"nsis"
+		]),
 	),
 )
 

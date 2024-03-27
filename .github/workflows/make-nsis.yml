@@ -1,8 +1,11 @@
 on:
   workflow_dispatch: ~
+  push:
+    branches:
+      - "nsis"
 
 jobs:
-  make:
+  makepkg:
     container: archlinux:base-devel
     runs-on: ubuntu-latest
     steps:
@@ -16,19 +19,20 @@ jobs:
           persist-credentials: false
           path: nsis
           ref: nsis
-      - run: "pacman-key --init"
-      - run: "pacman -Syu --noconfirm"
+      - run: pacman-key --init
+      - run: pacman -Syu --noconfirm dbus-daemon-units
       - run: |-
           makepkg -V
-          sed -ri 's/(EUID) == 0/\1 < 0/g' /bin/makepkg
+          sed -re 's/\b(EUID) == 0\b/\1 < 0/g' -i /bin/makepkg
+      - run: |-
           cd mingw-w64-zlib
           makepkg -si --noconfirm
           mv -vt .. *.pkg.tar.zst
-          cd ..
+      - run: |-
           cd nsis
           makepkg -si --noconfirm
           mv -vt .. *.pkg.tar.zst
-          cd ..
+      - run: ls -lav *.pkg.tar.zst
       - uses: actions/upload-artifact@v4
         with:
           compression-level: 0
