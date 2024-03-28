@@ -2,7 +2,7 @@ on:
   workflow_dispatch: ~
   push:
     branches:
-      - "nsis"
+      - "libcurl-julia-bin"
 
 jobs:
   makepkg:
@@ -12,13 +12,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-          path: mingw-w64-zlib
-          ref: mingw-w64-zlib
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          path: nsis
-          ref: nsis
+          path: libcurl-julia-bin
+          ref: libcurl-julia-bin
       - run: pacman-key --init
       - run: pacman -Syu --noconfirm dbus-daemon-units
       - run: |-
@@ -26,11 +21,7 @@ jobs:
           echo 'PACKAGER="Heptazhou <zhou@0h7z.com>"' >> /etc/makepkg.conf
           sed -re 's/\b(EUID) == 0\b/\1 < -0/g' -i /bin/makepkg
       - run: |-
-          cd mingw-w64-zlib
-          makepkg -si --noconfirm
-          mv -vt .. *.pkg.tar.zst
-      - run: |-
-          cd nsis
+          cd libcurl-julia-bin
           makepkg -si --noconfirm
           mv -vt .. *.pkg.tar.zst
       - run: ls -lav *.pkg.tar.zst

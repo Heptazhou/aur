@@ -57,13 +57,13 @@ const MAKEPKG(pkgbases::Vector{String}) = ODict(
 				S"pacman -Syu --noconfirm dbus-daemon-units"
 				"""
 				makepkg -V
-				sed -re 's/$(s"\b(EUID) == 0\b/\1 < 0")/g' -i /bin/\
-				makepkg"""
+				echo 'PACKAGER="Heptazhou <zhou@0h7z.com>"' >> /etc/makepkg.conf
+				sed -re 's/$(s"\b(EUID) == 0\b/\1 < -0")/g' -i /bin/makepkg"""
 				map(pkgbase -> strip("""
 				cd $pkgbase
 				makepkg -si --noconfirm
 				mv -vt .. *.pkg.tar.zst
-				"""), pkgbases)
+				"""), pkgbases)...
 				S"ls -lav *.pkg.tar.zst"
 			]
 			ACT_ARTIFACT("*.pkg.tar.zst")
@@ -92,6 +92,17 @@ write(".github/workflows/repo-sync.yml",
 	),
 )
 
+# https://aur.archlinux.org/packages/libcurl-julia-bin
+write(".github/workflows/make-libcurl-julia-bin.yml",
+	yaml(
+		S"on" => ODict(
+			S"workflow_dispatch" => nothing,
+			S"push" => ODict(S"branches" => ["libcurl-julia-bin"]),
+		),
+		S"jobs" => MAKEPKG(["libcurl-julia-bin"]),
+	),
+)
+
 # https://aur.archlinux.org/packages/nsis
 write(".github/workflows/make-nsis.yml",
 	yaml(
@@ -99,10 +110,7 @@ write(".github/workflows/make-nsis.yml",
 			S"workflow_dispatch" => nothing,
 			S"push" => ODict(S"branches" => ["nsis"]),
 		),
-		S"jobs" => MAKEPKG([
-			"mingw-w64-zlib"
-			"nsis"
-		]),
+		S"jobs" => MAKEPKG(["mingw-w64-zlib", "nsis"]),
 	),
 )
 
