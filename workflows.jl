@@ -134,7 +134,7 @@ makepkg(["conda-zsh-completion"], "0.11-1", false)
 makepkg(["glibc-linux4"], "2.38-1", false)
 
 # https://aur.archlinux.org/packages/iraf-bin
-makepkg(["iraf-bin"], "2.17.1-2", false)
+makepkg(["iraf-bin"], "2.17.1-3", false)
 
 # https://aur.archlinux.org/packages/libcurl-julia-bin
 makepkg(["libcurl-julia-bin"], "1.10-1")
