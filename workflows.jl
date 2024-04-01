@@ -138,6 +138,9 @@ syncpkg([
 	"yay"
 ])
 
+# https://aur.archlinux.org/packages/7-zip-full
+makepkg(["7-zip-full"], "23.01-4")
+
 # https://aur.archlinux.org/packages/conda-zsh-completion
 makepkg(["conda-zsh-completion"], "0.11-1", false)
 
@@ -145,7 +148,7 @@ makepkg(["conda-zsh-completion"], "0.11-1", false)
 makepkg(["glibc-linux4"], "2.38-1", false)
 
 # https://aur.archlinux.org/packages/iraf-bin
-makepkg(["iraf-bin"], "2.17.1-3", false)
+makepkg(["iraf-bin"], "2.17.1-3")
 
 # https://aur.archlinux.org/packages/libcurl-julia-bin
 makepkg(["libcurl-julia-bin"], "1.10-1")
@@ -158,4 +161,7 @@ makepkg(["mingw-w64-zlib", "nsis"], "3.09-1")
 
 # https://aur.archlinux.org/packages/xgterm-bin
 makepkg(["xgterm-bin"], "2.1-1", false)
+
+# https://aur.archlinux.org/packages/yay
+makepkg(["yay"], "12.3.5-1", false)
 
