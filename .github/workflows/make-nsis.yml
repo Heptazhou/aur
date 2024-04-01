@@ -29,10 +29,12 @@ jobs:
           sed -re 's/^#?(PACKAGER).*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
       - run: |-
           cd mingw-w64-zlib
+          git rev-parse HEAD | tee ../head
           makepkg -si --noconfirm
           mv -vt .. *.pkg.tar.zst
       - run: |-
           cd nsis
+          git rev-parse HEAD | tee ../head
           makepkg -si --noconfirm
           mv -vt .. *.pkg.tar.zst
       - run: ls -lav *.pkg.tar.zst
@@ -40,7 +42,7 @@ jobs:
         with:
           compression-level: 0
           path: "*.pkg.tar.zst"
-      - run: gh release create -p --target nsis nsis-v3.09-1 *.pkg.tar.zst
+      - run: gh release create -p --target `cat head` nsis-v3.09-1 *.pkg.tar.zst
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.PAT }}

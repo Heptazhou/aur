@@ -68,13 +68,14 @@ const JOB_MAKE(pkgbases::Vector{String}, tag::String) = ODict(
 			 -i /etc/makepkg.conf"""
 			map(pkgbase -> strip("""
 			cd $pkgbase
+			git rev-parse HEAD | tee ../head
 			makepkg -si --noconfirm
 			mv -vt .. *.pkg.tar.zst
 			"""), pkgbases)
 			S"ls -lav *.pkg.tar.zst"
 		]
 		ACT_ARTIFACT("*.pkg.tar.zst")
-		ACT_GH("gh release create -p --target " * pkgbases[end] *
+		ACT_GH("gh release create -p --target `cat head`" *
 			   " $tag *.pkg.tar.zst")
 	],
 )

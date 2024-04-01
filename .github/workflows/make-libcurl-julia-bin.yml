@@ -24,6 +24,7 @@ jobs:
           sed -re 's/^#?(PACKAGER).*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
       - run: |-
           cd libcurl-julia-bin
+          git rev-parse HEAD | tee ../head
           makepkg -si --noconfirm
           mv -vt .. *.pkg.tar.zst
       - run: ls -lav *.pkg.tar.zst
@@ -31,7 +32,7 @@ jobs:
         with:
           compression-level: 0
           path: "*.pkg.tar.zst"
-      - run: gh release create -p --target libcurl-julia-bin libcurl-julia-bin-v1.10-1 *.pkg.tar.zst
+      - run: gh release create -p --target `cat head` libcurl-julia-bin-v1.10-1 *.pkg.tar.zst
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.PAT }}
