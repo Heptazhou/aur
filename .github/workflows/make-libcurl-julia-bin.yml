@@ -2,24 +2,26 @@ on:
   workflow_dispatch: ~
   push:
     branches:
-      - "libcurl-julia-bin"
+      - "master"
+    paths:
+      - ".github/packages/libcurl-julia-bin/version.txt"
 
 jobs:
   makepkg:
     container: archlinux:base-devel
     runs-on: ubuntu-latest
     steps:
+      - run: pacman-key --init
+      - run: pacman -Syu --noconfirm dbus-daemon-units git github-cli
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
           path: libcurl-julia-bin
           ref: libcurl-julia-bin
-      - run: pacman-key --init
-      - run: pacman -Syu --noconfirm dbus-daemon-units
       - run: |-
           makepkg -V
-          echo 'PACKAGER="Heptazhou <zhou@0h7z.com>"' >> /etc/makepkg.conf
           sed -re 's/\b(EUID) == 0\b/\1 < -0/g' -i /bin/makepkg
+          sed -re 's/^#?(PACKAGER).*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
       - run: |-
           cd libcurl-julia-bin
           makepkg -si --noconfirm
@@ -29,3 +31,7 @@ jobs:
         with:
           compression-level: 0
           path: "*.pkg.tar.zst"
+      - run: gh release create -p --target libcurl-julia-bin libcurl-julia-bin-v1.10-1 *.pkg.tar.zst
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.PAT }}
