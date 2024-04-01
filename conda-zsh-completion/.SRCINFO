@@ -1,13 +1,14 @@
 pkgbase = conda-zsh-completion
-	pkgdesc = Zsh completion for conda and mamba
-	pkgver = 0.10
-	pkgrel = 2
-	url = https://github.com/esc/conda-zsh-completion
+	pkgdesc = Zsh completion for conda, mamba, and micromamba
+	pkgver = 0.11
+	pkgrel = 1
+	url = https://github.com/conda-incubator/conda-zsh-completion
 	arch = any
 	license = custom
 	depends = zsh
 	depends = python
-	source = conda-zsh-completion-v0.10.tar.gz::https://github.com/esc/conda-zsh-completion/archive/382d840f7ad053b3b2ccf0b1f52b26bdabaf66b3.tar.gz
-	sha256sums = 74f7651706e470443192966d5fba8f89a0a7145add625a58eb7bf90987521fa6
+	options = !debug
+	source = conda-zsh-completion-v0.11.tar.gz::https://github.com/conda-incubator/conda-zsh-completion/archive/v0.11.tar.gz
+	sha256sums = 584d5817e276f01f5d789e01ba5c6688667b38d3c9f4ad2cd735a9901e27aa33
 
 pkgname = conda-zsh-completion

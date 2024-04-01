@@ -1,0 +1,38 @@
+on:
+  workflow_dispatch: ~
+  push:
+    branches:
+      - "master"
+    paths:
+      - ".github/packages/locale-mul_zz/version.txt"
+
+jobs:
+  makepkg:
+    container: archlinux:base-devel
+    runs-on: ubuntu-latest
+    steps:
+      - run: pacman-key --init
+      - run: pacman -Syu --noconfirm dbus-daemon-units git github-cli
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          path: locale-mul_zz
+          ref: locale-mul_zz
+      - run: |-
+          makepkg -V
+          sed -re 's/\b(EUID) == 0\b/\1 < -0/g' -i /bin/makepkg
+          sed -re 's/^#?(PACKAGER).*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
+      - run: |-
+          cd locale-mul_zz
+          git rev-parse HEAD | tee ../head
+          makepkg -si --noconfirm
+          mv -vt .. *.pkg.tar.zst
+      - run: ls -lav *.pkg.tar.zst
+      - uses: actions/upload-artifact@v4
+        with:
+          compression-level: 0
+          path: "*.pkg.tar.zst"
+      - run: gh release create -p --target `cat head` locale-mul_zz-v2.0-3 *.pkg.tar.zst
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.PAT }}

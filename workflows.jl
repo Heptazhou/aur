@@ -84,7 +84,7 @@ const JOB_SYNC(pkgbase::String) = ODict(
 	S"steps"   => [ACT_CHECKOUT(), ACT_SYNC(pkgbase)],
 )
 
-function makepkg(pkgbases::Vector{String}, v::String)
+function makepkg(pkgbases::Vector{String}, v::String, make::Bool = true)
 	p = pkgbases[end]
 	f = ".github/packages/$p/version.txt"
 	mkpath(dirname(f))
@@ -103,6 +103,7 @@ function makepkg(pkgbases::Vector{String}, v::String)
 			),
 		),
 	)
+	make || rm(f)
 end
 
 write(".github/workflows/repo-sync.yml",
@@ -124,8 +125,17 @@ write(".github/workflows/repo-sync.yml",
 	),
 )
 
+# https://aur.archlinux.org/packages/conda-zsh-completion
+makepkg(["conda-zsh-completion"], "0.11-1", false)
+
+# https://aur.archlinux.org/packages/glibc-linux4
+makepkg(["glibc-linux4"], "2.38-1", false)
+
 # https://aur.archlinux.org/packages/libcurl-julia-bin
 makepkg(["libcurl-julia-bin"], "1.10-1")
+
+# https://aur.archlinux.org/packages/locale-mul_zz
+makepkg(["locale-mul_zz"], "2.0-3", false)
 
 # https://aur.archlinux.org/packages/nsis
 makepkg(["mingw-w64-zlib", "nsis"], "3.09-1")

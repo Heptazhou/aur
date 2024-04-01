@@ -1,24 +1,24 @@
 # Maintainer: Heptazhou <zhou at 0h7z dot com>
 
 pkgname=conda-zsh-completion
-pkgver_=382d840f7ad053b3b2ccf0b1f52b26bdabaf66b3
-pkgver=0.10
-pkgrel=2
-pkgdesc="Zsh completion for conda and mamba"
+pkgver=0.11
+pkgrel=1
+pkgdesc="Zsh completion for conda, mamba, and micromamba"
 arch=("any")
-url="https://github.com/esc/$pkgname"
+url="https://github.com/conda-incubator/$pkgname"
 license=("custom")
 depends=("zsh" "python")
-source=("$pkgname-v$pkgver.tar.gz::https://github.com/esc/$pkgname/archive/$pkgver_.tar.gz")
-sha256sums=("74f7651706e470443192966d5fba8f89a0a7145add625a58eb7bf90987521fa6")
+options=(!debug)
+source=("$pkgname-v$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=("584d5817e276f01f5d789e01ba5c6688667b38d3c9f4ad2cd735a9901e27aa33")
 
 package() {
-	cd -- "$srcdir/$pkgname-$pkgver_"
-	install -Dm644 -t "$pkgdir/usr/share/zsh/site-functions" "_conda"
-	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" "LICENSE"
+	cd -- "$srcdir/$pkgname-$pkgver/"
+	install -Dm644 -t "$pkgdir/usr/share/zsh/site-functions/" "_conda"
+	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname/" "LICENSE"
 }
 
 build() {
-	cd -- "$srcdir/$pkgname-$pkgver_"
-	mv -f "LICENSE.txt" "LICENSE"
+	cd -- "$srcdir/$pkgname-$pkgver/"
+	mv -f "LICENSE"{.txt,}
 }
