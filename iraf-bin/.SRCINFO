@@ -8,11 +8,12 @@ pkgbase = iraf-bin
 	depends = bash
 	depends = cfitsio
 	depends = expat
-	optdepends = xgterm: to start irafcl in xgterm
+	optdepends = ds9: Image display tool for astronomy
+	optdepends = xgterm: Terminal emulator to work with IRAF
 	provides = iraf
 	conflicts = iraf
 	options = !debug
-	source = https://ftp.debian.org/debian/pool/main/i/iraf/iraf_2.17.1-5_amd64.deb
+	source = https://deb.debian.org/debian/pool/main/i/iraf/iraf_2.17.1-5_amd64.deb
 	sha256sums = 72122b4274fe2db881f3ac0a9da226ba0498570311dc83efe571fd44a7df0226
 
 pkgname = iraf-bin

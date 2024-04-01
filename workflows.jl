@@ -113,6 +113,7 @@ write(".github/workflows/repo-sync.yml",
 			S"schedule" => [ODict(S"cron" => "0 */4 * * *")],
 		),
 		S"jobs" => ODict(Symbol(x) => JOB_SYNC(x) for x ∈ [
+			"7-zip-full"
 			"conda-zsh-completion"
 			"glibc-linux4"
 			"iraf-bin"
@@ -121,6 +122,7 @@ write(".github/workflows/repo-sync.yml",
 			"mingw-w64-zlib"
 			"nsis"
 			"xgterm-bin"
+			"yay"
 		]),
 	),
 )
@@ -131,6 +133,9 @@ makepkg(["conda-zsh-completion"], "0.11-1", false)
 # https://aur.archlinux.org/packages/glibc-linux4
 makepkg(["glibc-linux4"], "2.38-1", false)
 
+# https://aur.archlinux.org/packages/iraf-bin
+makepkg(["iraf-bin"], "2.17.1-2", false)
+
 # https://aur.archlinux.org/packages/libcurl-julia-bin
 makepkg(["libcurl-julia-bin"], "1.10-1")
 
@@ -139,4 +144,7 @@ makepkg(["locale-mul_zz"], "2.0-3", false)
 
 # https://aur.archlinux.org/packages/nsis
 makepkg(["mingw-w64-zlib", "nsis"], "3.09-1")
+
+# https://aur.archlinux.org/packages/xgterm-bin
+makepkg(["xgterm-bin"], "2.1-1", false)
 

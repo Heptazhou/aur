@@ -4,6 +4,18 @@ on:
     - cron: "0 */4 * * *"
 
 jobs:
+  7-zip-full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/7-zip-full.git
+          source_branch: master
+          destination_branch: 7-zip-full
+          github_token: ${{ secrets.PAT }}
   conda-zsh-completion:
     runs-on: ubuntu-latest
     steps:
@@ -99,4 +111,16 @@ jobs:
           source_repo: https://aur.archlinux.org/xgterm-bin.git
           source_branch: master
           destination_branch: xgterm-bin
+          github_token: ${{ secrets.PAT }}
+  yay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: repo-sync/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/yay.git
+          source_branch: master
+          destination_branch: yay
           github_token: ${{ secrets.PAT }}
