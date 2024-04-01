@@ -1,10 +1,15 @@
 on:
   workflow_dispatch: ~
+  push:
+    branches:
+      - "master"
+    paths:
+      - ".github/workflows/repo-sync.yml"
   schedule:
     - cron: "0 */4 * * *"
 
 jobs:
-  7-zip-full:
+  _7-zip-full:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

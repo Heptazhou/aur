@@ -105,27 +105,38 @@ function makepkg(pkgbases::Vector{String}, v::String, make::Bool = true)
 	)
 	make || rm(f)
 end
-
-write(".github/workflows/repo-sync.yml",
-	yaml(
-		S"on" => ODict(
-			S"workflow_dispatch" => nothing,
-			S"schedule" => [ODict(S"cron" => "0 */4 * * *")],
+function syncpkg(pkgbases::Vector{String})
+	p = s -> isdigit(s[begin]) ? Symbol(:_, s) : Symbol(s)
+	f = ".github/workflows/repo-sync.yml"
+	write(f,
+		yaml(
+			S"on" => ODict(
+				S"workflow_dispatch" => nothing,
+				S"push" => ODict(
+					S"branches" => ["master"],
+					S"paths"    => [f],
+				),
+				S"schedule" => [ODict(S"cron" => "0 */4 * * *")],
+			),
+			S"jobs" => ODict(
+				p(pkgbase) => JOB_SYNC(pkgbase) for pkgbase ∈ pkgbases
+			),
 		),
-		S"jobs" => ODict(Symbol(x) => JOB_SYNC(x) for x ∈ [
-			"7-zip-full"
-			"conda-zsh-completion"
-			"glibc-linux4"
-			"iraf-bin"
-			"libcurl-julia-bin"
-			"locale-mul_zz"
-			"mingw-w64-zlib"
-			"nsis"
-			"xgterm-bin"
-			"yay"
-		]),
-	),
-)
+	)
+end
+
+syncpkg([
+	"7-zip-full"
+	"conda-zsh-completion"
+	"glibc-linux4"
+	"iraf-bin"
+	"libcurl-julia-bin"
+	"locale-mul_zz"
+	"mingw-w64-zlib"
+	"nsis"
+	"xgterm-bin"
+	"yay"
+])
 
 # https://aur.archlinux.org/packages/conda-zsh-completion
 makepkg(["conda-zsh-completion"], "0.11-1", false)
