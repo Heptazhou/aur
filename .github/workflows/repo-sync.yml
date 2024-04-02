@@ -105,6 +105,18 @@ jobs:
           source_branch: master
           destination_branch: nsis
           github_token: ${{ secrets.PAT }}
+  wine-wow64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: heptazhou/github-sync@v2.3.0
+        with:
+          source_repo: https://aur.archlinux.org/wine-wow64.git
+          source_branch: master
+          destination_branch: wine-wow64
+          github_token: ${{ secrets.PAT }}
   xgterm-bin:
     runs-on: ubuntu-latest
     steps:

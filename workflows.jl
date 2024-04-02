@@ -90,11 +90,11 @@ const JOB_SYNC(pkgbase::String) = ODict(
 	S"steps"   => [ACT_CHECKOUT(), ACT_SYNC(pkgbase)],
 )
 
-function makepkg(pkgbases::Vector{String}, v::String, make::Bool)
+function makepkg(pkgbases::Vector{String}, make::Integer, v::String)
 	p = pkgbases[end]
 	f = ".github/packages/$p/version.txt"
-	make && mkpath(dirname(f))
-	make && write(f, "$p-v$v", "\n")
+	Bool(make) ? mkpath(dirname(f)) : return
+	write(f, "$p-v$v", "\n")
 	write(".github/workflows/make-$p.yml",
 		yaml(
 			S"on" => ODict(
@@ -130,43 +130,21 @@ function syncpkg(pkgbases::Vector{String})
 	)
 end
 
-syncpkg([
-	"7-zip-full"
-	"conda-zsh-completion"
-	"glibc-linux4"
-	"iraf-bin"
-	"libcurl-julia-bin"
-	"locale-mul_zz"
-	"mingw-w64-zlib"
-	"nsis"
-	"xgterm-bin"
-	"yay"
-])
-
-# https://aur.archlinux.org/packages/7-zip-full
-makepkg(["7-zip-full"], "23.01-4", true)
-
-# https://aur.archlinux.org/packages/conda-zsh-completion
-makepkg(["conda-zsh-completion"], "0.11-1", false)
-
-# https://aur.archlinux.org/packages/glibc-linux4
-makepkg(["glibc-linux4"], "2.38-1", false)
-
-# https://aur.archlinux.org/packages/iraf-bin
-makepkg(["iraf-bin"], "2.17.1-4", true)
-
-# https://aur.archlinux.org/packages/libcurl-julia-bin
-makepkg(["libcurl-julia-bin"], "1.10-1", true)
-
-# https://aur.archlinux.org/packages/locale-mul_zz
-makepkg(["locale-mul_zz"], "2.0-3", false)
-
-# https://aur.archlinux.org/packages/nsis
-makepkg(["mingw-w64-zlib", "nsis"], "3.09-1", true)
-
-# https://aur.archlinux.org/packages/xgterm-bin
-makepkg(["xgterm-bin"], "2.1-2", false)
-
-# https://aur.archlinux.org/packages/yay
-makepkg(["yay"], "12.3.5-1", true)
+# https://aur.archlinux.org/packages
+const dict = ODict(
+	["7-zip-full"]             => (1, "23.01-4"),
+	["conda-zsh-completion"]   => (0, "0.11-1"),
+	["glibc-linux4"]           => (0, "2.38-1"),
+	["iraf-bin"]               => (1, "2.17.1-4"),
+	["libcurl-julia-bin"]      => (1, "1.10-1"),
+	["locale-mul_zz"]          => (0, "2.0-3"),
+	["mingw-w64-zlib", "nsis"] => (1, "3.09-1"),
+	["wine-wow64"]             => (0, "9.5-1"),
+	["xgterm-bin"]             => (0, "2.1-2"),
+	["yay"]                    => (1, "12.3.5-1"),
+)
+for (k, v) ∈ dict
+	makepkg(k, v...)
+end
+syncpkg(sort!(reduce(∪, dict.keys)))
 
