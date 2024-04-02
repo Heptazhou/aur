@@ -32,7 +32,7 @@ jobs:
         with:
           compression-level: 0
           path: "*.pkg.tar.zst"
-      - run: gh release create -p --target `cat head` iraf-bin-v2.17.1-3 *.pkg.tar.zst
+      - run: gh release create -p --target `cat head` iraf-bin-v2.17.1-4 *.pkg.tar.zst
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.PAT }}

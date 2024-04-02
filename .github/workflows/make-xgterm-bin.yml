@@ -32,7 +32,7 @@ jobs:
         with:
           compression-level: 0
           path: "*.pkg.tar.zst"
-      - run: gh release create -p --target `cat head` xgterm-bin-v2.1-1 *.pkg.tar.zst
+      - run: gh release create -p --target `cat head` xgterm-bin-v2.1-2 *.pkg.tar.zst
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.PAT }}

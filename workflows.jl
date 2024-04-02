@@ -88,7 +88,7 @@ function makepkg(pkgbases::Vector{String}, v::String, make::Bool = true)
 	p = pkgbases[end]
 	f = ".github/packages/$p/version.txt"
 	mkpath(dirname(f))
-	write(f, "$p-v$v", "\n")
+	make && write(f, "$p-v$v", "\n")
 	write(".github/workflows/make-$p.yml",
 		yaml(
 			S"on" => ODict(
@@ -103,7 +103,6 @@ function makepkg(pkgbases::Vector{String}, v::String, make::Bool = true)
 			),
 		),
 	)
-	make || rm(f)
 end
 function syncpkg(pkgbases::Vector{String})
 	p = s -> isdigit(s[begin]) ? Symbol(:_, s) : Symbol(s)
@@ -139,7 +138,7 @@ syncpkg([
 ])
 
 # https://aur.archlinux.org/packages/7-zip-full
-makepkg(["7-zip-full"], "23.01-4")
+makepkg(["7-zip-full"], "23.01-4", true)
 
 # https://aur.archlinux.org/packages/conda-zsh-completion
 makepkg(["conda-zsh-completion"], "0.11-1", false)
@@ -148,19 +147,19 @@ makepkg(["conda-zsh-completion"], "0.11-1", false)
 makepkg(["glibc-linux4"], "2.38-1", false)
 
 # https://aur.archlinux.org/packages/iraf-bin
-makepkg(["iraf-bin"], "2.17.1-3")
+makepkg(["iraf-bin"], "2.17.1-4", !true)
 
 # https://aur.archlinux.org/packages/libcurl-julia-bin
-makepkg(["libcurl-julia-bin"], "1.10-1")
+makepkg(["libcurl-julia-bin"], "1.10-1", true)
 
 # https://aur.archlinux.org/packages/locale-mul_zz
 makepkg(["locale-mul_zz"], "2.0-3", false)
 
 # https://aur.archlinux.org/packages/nsis
-makepkg(["mingw-w64-zlib", "nsis"], "3.09-1")
+makepkg(["mingw-w64-zlib", "nsis"], "3.09-1", true)
 
 # https://aur.archlinux.org/packages/xgterm-bin
-makepkg(["xgterm-bin"], "2.1-1", false)
+makepkg(["xgterm-bin"], "2.1-2", false)
 
 # https://aur.archlinux.org/packages/yay
 makepkg(["yay"], "12.3.5-1", false)

@@ -1,7 +1,7 @@
 pkgbase = iraf-bin
 	pkgdesc = IRAF - Image Reduction and Analysis Facility
 	pkgver = 2.17.1
-	pkgrel = 3
+	pkgrel = 4
 	url = https://github.com/iraf-community/iraf
 	arch = x86_64
 	license = custom

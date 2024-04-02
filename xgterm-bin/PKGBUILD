@@ -1,32 +1,33 @@
 # Maintainer: Heptazhou <zhou at 0h7z dot com>
 
+pkgbase_=x11iraf
 pkgname_=xgterm
 pkgname=$pkgname_-bin
-debver=2.1+dfsg-1
+debver=2.1+dfsg-2
 pkgver=2.1
-pkgrel=1
-pkgdesc="X11/GUI utilities and applications for IRAF (xgterm, ximtool, xtapemon)"
+pkgrel=2
+pkgdesc="Terminal emulator to work with IRAF"
 arch=("x86_64")
-url="https://github.com/iraf-community/x11iraf"
+url="https://github.com/iraf-community/$pkgbase_"
+url_="https://deb.debian.org/debian/pool/main/${pkgbase_:0:1}/$pkgbase_"
 license=("custom")
 provides=("$pkgname_")
 conflicts=("$pkgname_")
 depends=("libxaw" "ncurses" "tcl" "xaw3d")
-optdepends=("iraf: to use with irafcl")
-source=(https://ftp.debian.org/debian/pool/main/x/x11iraf/${pkgname_}_${debver}_amd64.deb)
-sha256sums=("26ab665668e8584fef16bfb68c6ecd264794f01386ec83ddbeb14c8a15aeb206")
-# https://packages.debian.org/sid/xgterm
+optdepends=("iraf: Image Reduction and Analysis Facility")
+source=(${url_}/${pkgname_}_${debver}_amd64.deb)
+sha256sums=("4e718bbef790d2d6787869bfd1fccbf1c3aef306f5522678d7e3026ed5426454")
+# https://tracker.debian.org/pkg/x11iraf
 
 package() {
-	cd -- "$srcdir"
-	tar xf "data.tar.xz"
+	cd -- "$srcdir/"
+	tar fx "data.tar.xz"
 
-	mkdir "usr/share/licenses/$pkgname_" -p
+	mkdir "usr/share/licenses/$pkgname_/" -p
 	mv -T "usr/share"/{"doc/$pkgname_/copyright","licenses/$pkgname_/LICENSE"}
 	rm -r "usr/share"/{"doc","lintian"} -f
-	cp -t "$pkgdir" -a "usr"
+	cp -t "$pkgdir/" -a "usr"
 
-	mkdir "$pkgdir/usr/lib" -p
-	cd -- "$pkgdir/usr/lib"
-	ln -s "libXaw3d.so"{,.6}
+	mkdir "$pkgdir/usr/lib/" -p
+	ln -s "$pkgdir/usr/lib/libXaw3d.so"{,.6} -r
 }

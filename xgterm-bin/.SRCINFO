@@ -1,7 +1,7 @@
 pkgbase = xgterm-bin
-	pkgdesc = X11/GUI utilities and applications for IRAF (xgterm, ximtool, xtapemon)
+	pkgdesc = Terminal emulator to work with IRAF
 	pkgver = 2.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/iraf-community/x11iraf
 	arch = x86_64
 	license = custom
@@ -9,10 +9,10 @@ pkgbase = xgterm-bin
 	depends = ncurses
 	depends = tcl
 	depends = xaw3d
-	optdepends = iraf: to use with irafcl
+	optdepends = iraf: Image Reduction and Analysis Facility
 	provides = xgterm
 	conflicts = xgterm
-	source = https://ftp.debian.org/debian/pool/main/x/x11iraf/xgterm_2.1+dfsg-1_amd64.deb
-	sha256sums = 26ab665668e8584fef16bfb68c6ecd264794f01386ec83ddbeb14c8a15aeb206
+	source = https://deb.debian.org/debian/pool/main/x/x11iraf/xgterm_2.1+dfsg-2_amd64.deb
+	sha256sums = 4e718bbef790d2d6787869bfd1fccbf1c3aef306f5522678d7e3026ed5426454
 
 pkgname = xgterm-bin

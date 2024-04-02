@@ -5,11 +5,11 @@ pkgname_=($pkgbase_{,-noao})
 pkgname=(${pkgname_[@]/%/-bin})
 debver=2.17.1-5
 pkgver=2.17.1
-pkgrel=3
+pkgrel=4
 pkgdesc="IRAF - Image Reduction and Analysis Facility"
 arch=("x86_64")
 url="https://github.com/iraf-community/$pkgbase_"
-url_="https://deb.debian.org/debian/pool/main/i/$pkgbase_"
+url_="https://deb.debian.org/debian/pool/main/${pkgbase_:0:1}/$pkgbase_"
 license=("custom")
 options=(!debug)
 noextract=(${pkgname_[@]/%/_${debver}_amd64.deb})
@@ -54,7 +54,7 @@ package_iraf-noao-bin() {
 	cd -- "$srcdir/$pkgbase_-noao/"
 
 	mkdir "usr/share/licenses/" -p
-	ln -s "usr/share/licenses/$pkgbase_"{,-noao}
+	ln -s "usr/share/licenses/$pkgbase_"{,-noao} -r
 	rm -r "usr/share"/{"doc","lintian"} -f
 	cp -t "$pkgdir/" -a "usr"
 }
