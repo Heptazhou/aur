@@ -35,14 +35,15 @@ const ACT_CHECKOUT(xs::Pair...) = ODict(
 	S"with" => ODict(S"persist-credentials" => false, xs...),
 )
 const ACT_GH(cmd::String) = ODict(
-	S"run" => Symbol(cmd),
+	S"run" => rstrip(cmd),
 	S"env" => ODict(
 		S"GH_REPO"  => S"${{ github.repository }}",
 		S"GH_TOKEN" => S"${{ secrets.PAT }}",
 	),
 )
 const ACT_SYNC(pkgbase::String) = ODict(
-	S"uses" => S"repo-sync/github-sync@v2.3.0",
+	# https://github.com/Heptazhou/github-sync
+	S"uses" => S"heptazhou/github-sync@v2.3.0",
 	S"with" => ODict(
 		S"source_repo"        => Symbol("https://aur.archlinux.org/$pkgbase.git"),
 		S"source_branch"      => S"master",
@@ -62,7 +63,7 @@ const JOB_MAKE(pkgbases::Vector{String}, tag::String) = ODict(
 		ACT_CHECKOUT.(sort(pkgbases))
 		S"run" .=> [
 			"""
-			makepkg -V
+			makepkg --version
 			sed -re 's/\\b(EUID) == 0\\b/\\1 < -0/g' -i /bin/makepkg
 			sed -re 's/^#?(PACKAGER).*\$/\\1="$PACKAGER"/g' \
 			 -i /etc/makepkg.conf"""
@@ -75,8 +76,13 @@ const JOB_MAKE(pkgbases::Vector{String}, tag::String) = ODict(
 			S"ls -lav *.pkg.tar.zst"
 		]
 		ACT_ARTIFACT("*.pkg.tar.zst")
-		ACT_GH("gh release create -p --target `cat head`" *
-			   " $tag *.pkg.tar.zst")
+		ACT_GH(
+			"""
+			gh --version
+			gh release create $tag *.pkg.tar.zst --target `cat head` || \\
+			gh release upload $tag *.pkg.tar.zst --clobber
+			""",
+		)
 	],
 )
 const JOB_SYNC(pkgbase::String) = ODict(
@@ -84,10 +90,10 @@ const JOB_SYNC(pkgbase::String) = ODict(
 	S"steps"   => [ACT_CHECKOUT(), ACT_SYNC(pkgbase)],
 )
 
-function makepkg(pkgbases::Vector{String}, v::String, make::Bool = true)
+function makepkg(pkgbases::Vector{String}, v::String, make::Bool)
 	p = pkgbases[end]
 	f = ".github/packages/$p/version.txt"
-	mkpath(dirname(f))
+	make && mkpath(dirname(f))
 	make && write(f, "$p-v$v", "\n")
 	write(".github/workflows/make-$p.yml",
 		yaml(
@@ -147,7 +153,7 @@ makepkg(["conda-zsh-completion"], "0.11-1", false)
 makepkg(["glibc-linux4"], "2.38-1", false)
 
 # https://aur.archlinux.org/packages/iraf-bin
-makepkg(["iraf-bin"], "2.17.1-4", !true)
+makepkg(["iraf-bin"], "2.17.1-4", true)
 
 # https://aur.archlinux.org/packages/libcurl-julia-bin
 makepkg(["libcurl-julia-bin"], "1.10-1", true)
@@ -162,5 +168,5 @@ makepkg(["mingw-w64-zlib", "nsis"], "3.09-1", true)
 makepkg(["xgterm-bin"], "2.1-2", false)
 
 # https://aur.archlinux.org/packages/yay
-makepkg(["yay"], "12.3.5-1", false)
+makepkg(["yay"], "12.3.5-1", true)
 

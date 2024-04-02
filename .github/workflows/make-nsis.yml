@@ -24,7 +24,7 @@ jobs:
           path: nsis
           ref: nsis
       - run: |-
-          makepkg -V
+          makepkg --version
           sed -re 's/\b(EUID) == 0\b/\1 < -0/g' -i /bin/makepkg
           sed -re 's/^#?(PACKAGER).*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
       - run: |-
@@ -42,7 +42,10 @@ jobs:
         with:
           compression-level: 0
           path: "*.pkg.tar.zst"
-      - run: gh release create -p --target `cat head` nsis-v3.09-1 *.pkg.tar.zst
+      - run: |-
+          gh --version
+          gh release create nsis-v3.09-1 *.pkg.tar.zst --target `cat head` || \
+          gh release upload nsis-v3.09-1 *.pkg.tar.zst --clobber
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.PAT }}
