@@ -34,9 +34,9 @@ const ACT_CHECKOUT(xs::Pair...) = ODict(
 	S"uses" => S"actions/checkout@v4",
 	S"with" => ODict(S"persist-credentials" => false, xs...),
 )
-const ACT_GH(cmd::String) = ODict(
-	S"run" => rstrip(cmd),
-	S"env" => ODict(
+const ACT_GH(cmd::String, envs::Pair...) = ODict(
+	S"run" => cmd,
+	S"env" => ODict(envs...,
 		S"GH_REPO"  => S"${{ github.repository }}",
 		S"GH_TOKEN" => S"${{ secrets.PAT }}",
 	),
@@ -76,12 +76,12 @@ const JOB_MAKE(pkgbases::Vector{String}, tag::String) = ODict(
 			S"ls -lav *.pkg.tar.zst"
 		]
 		ACT_ARTIFACT("*.pkg.tar.zst")
-		ACT_GH(
-			"""
+		ACT_GH("""
 			gh --version
-			gh release create $tag *.pkg.tar.zst --target `cat head` || \\
-			gh release upload $tag *.pkg.tar.zst --clobber
-			""",
+			gh release delete \$GH_TAG --cleanup-tag -y || true
+			gh release create \$GH_TAG *.pkg.tar.zst --target `cat head` \
+			&& cat head""",
+			S"GH_TAG" => Symbol(tag),
 		)
 	],
 )

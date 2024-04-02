@@ -34,8 +34,9 @@ jobs:
           path: "*.pkg.tar.zst"
       - run: |-
           gh --version
-          gh release create iraf-bin-v2.17.1-4 *.pkg.tar.zst --target `cat head` || \
-          gh release upload iraf-bin-v2.17.1-4 *.pkg.tar.zst --clobber
+          gh release delete $GH_TAG --cleanup-tag -y || true
+          gh release create $GH_TAG *.pkg.tar.zst --target `cat head` && cat head
         env:
+          GH_TAG: iraf-bin-v2.17.1-4
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.PAT }}

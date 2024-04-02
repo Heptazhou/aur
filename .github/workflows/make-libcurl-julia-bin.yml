@@ -34,8 +34,9 @@ jobs:
           path: "*.pkg.tar.zst"
       - run: |-
           gh --version
-          gh release create libcurl-julia-bin-v1.10-1 *.pkg.tar.zst --target `cat head` || \
-          gh release upload libcurl-julia-bin-v1.10-1 *.pkg.tar.zst --clobber
+          gh release delete $GH_TAG --cleanup-tag -y || true
+          gh release create $GH_TAG *.pkg.tar.zst --target `cat head` && cat head
         env:
+          GH_TAG: libcurl-julia-bin-v1.10-1
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.PAT }}
