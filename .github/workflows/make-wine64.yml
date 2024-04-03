@@ -1,0 +1,42 @@
+on:
+  workflow_dispatch: ~
+  push:
+    branches:
+      - "master"
+    paths:
+      - ".github/packages/wine64/version.txt"
+
+jobs:
+  makepkg:
+    container: archlinux:base-devel
+    runs-on: ubuntu-latest
+    steps:
+      - run: pacman-key --init
+      - run: pacman -Syu --noconfirm dbus-daemon-units git github-cli
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          path: wine64
+          ref: wine64
+      - run: |-
+          makepkg --version
+          sed -re 's/\b(EUID) *== *0\b/\1 < -0/g' -i /bin/makepkg
+          sed -re 's/^#(MAKEFLAGS)=.*$/\1="-j`nproc`"/g' -re 's/^#(PACKAGER)=.*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
+      - run: |-
+          cd wine64
+          git rev-parse HEAD | tee ../head
+          makepkg -si --noconfirm
+          mv -vt .. *.pkg.tar.zst
+      - run: ls -lav *.pkg.tar.zst
+      - uses: actions/upload-artifact@v4
+        with:
+          compression-level: 0
+          path: "*.pkg.tar.zst"
+      - run: |-
+          gh --version
+          gh release delete $GH_TAG --cleanup-tag -y || true
+          gh release create $GH_TAG *.pkg.tar.zst --target `cat head` && cat head
+        env:
+          GH_TAG: wine64-v9.5-1
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.PAT }}

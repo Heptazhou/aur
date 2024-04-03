@@ -91,10 +91,10 @@ const JOB_SYNC(pkgbase::String) = ODict(
 	S"steps"   => [ACT_CHECKOUT(), ACT_SYNC(pkgbase)],
 )
 
-function makepkg(pkgbases::Vector{String}, make::Integer, v::String)
+function makepkg(pkgbases::Vector{String}, v::String)
 	p = pkgbases[end]
 	f = ".github/packages/$p/version.txt"
-	Bool(make) ? mkpath(dirname(f)) : return
+	mkpath(dirname(f))
 	write(f, "$p-v$v", "\n")
 	write(".github/workflows/make-$p.yml",
 		yaml(
@@ -114,6 +114,7 @@ end
 function syncpkg(pkgbases::Vector{String})
 	p = s -> isdigit(s[begin]) ? Symbol(:_, s) : Symbol(s)
 	f = ".github/workflows/repo-sync.yml"
+	mkpath(dirname(f))
 	write(f,
 		yaml(
 			S"on" => ODict(
@@ -133,19 +134,20 @@ end
 
 # https://aur.archlinux.org/packages
 const dict = ODict(
-	["7-zip-full"]             => (1, "23.01-4"),
-	["conda-zsh-completion"]   => (0, "0.11-1"),
-	["glibc-linux4"]           => (0, "2.38-1"),
-	["iraf-bin"]               => (1, "2.17.1-4"),
-	["libcurl-julia-bin"]      => (1, "1.10-1"),
-	["locale-mul_zz"]          => (0, "2.0-3"),
-	["mingw-w64-zlib", "nsis"] => (1, "3.09-1"),
-	["wine-wow64"]             => (0, "9.5-1"),
-	["xgterm-bin"]             => (0, "2.1-2"),
-	["yay"]                    => (1, "12.3.5-1"),
+	["7-zip-full"]             => (1, 1, "23.01-4"),
+	["conda-zsh-completion"]   => (1, 0, "0.11-1"),
+	["glibc-linux4"]           => (1, 0, "2.38-1"),
+	["iraf-bin"]               => (1, 1, "2.17.1-4"),
+	["libcurl-julia-bin"]      => (1, 1, "1.10-1"),
+	["locale-mul_zz"]          => (1, 0, "2.0-3"),
+	["mingw-w64-zlib", "nsis"] => (1, 1, "3.09-1"),
+	["wine-wow64"]             => (1, 0, "9.5-1"),
+	["wine64"]                 => (0, 1, "9.5-1"),
+	["xgterm-bin"]             => (1, 0, "2.1-2"),
+	["yay"]                    => (1, 1, "12.3.5-1"),
 )
-for (k, v) ∈ dict
-	makepkg(k, v...)
+for (k, v) ∈ filter((k, v)::Pair -> Bool(v[2]), dict)
+	makepkg(k, v[3])
 end
-syncpkg(sort!(reduce(∪, dict.keys)))
+syncpkg(sort!(reduce(∪, findall(Bool ∘ first, dict))))
 
