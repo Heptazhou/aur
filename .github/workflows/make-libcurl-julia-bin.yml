@@ -20,8 +20,8 @@ jobs:
           ref: libcurl-julia-bin
       - run: |-
           makepkg --version
-          sed -re 's/\b(EUID) == 0\b/\1 < -0/g' -i /bin/makepkg
-          sed -re 's/^#?(PACKAGER).*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
+          sed -re 's/\b(EUID) *== *0\b/\1 < -0/g' -i /bin/makepkg
+          sed -re 's/^#(MAKEFLAGS)=.*$/\1="-j`nproc`"/g' -re 's/^#(PACKAGER)=.*$/\1="Heptazhou <zhou@0h7z.com>"/g' -i /etc/makepkg.conf
       - run: |-
           cd libcurl-julia-bin
           git rev-parse HEAD | tee ../head

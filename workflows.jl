@@ -64,8 +64,9 @@ const JOB_MAKE(pkgbases::Vector{String}, tag::String) = ODict(
 		S"run" .=> [
 			"""
 			makepkg --version
-			sed -re 's/\\b(EUID) == 0\\b/\\1 < -0/g' -i /bin/makepkg
-			sed -re 's/^#?(PACKAGER).*\$/\\1="$PACKAGER"/g' \
+			sed -re 's/\\b(EUID) *== *0\\b/\\1 < -0/g' -i /bin/makepkg
+			sed -re 's/^#(MAKEFLAGS)=.*\$/\\1="-j`nproc`"/g' \
+				-re 's/^#(PACKAGER)=.*\$/\\1="$PACKAGER"/g' \
 			 -i /etc/makepkg.conf"""
 			map(pkgbase -> strip("""
 			cd $pkgbase
