@@ -3,3 +3,4 @@
 *.h linguist-language=C
 *.hook linguist-language=INI
 *.patch linguist-vendored
+/.github/workflows/*.yml linguist-generated

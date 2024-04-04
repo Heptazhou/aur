@@ -1,0 +1,83 @@
+on:
+  workflow_dispatch: ~
+  push:
+    branches:
+      - "master"
+    paths:
+      - ".github/workflows/repo-updt.yml"
+  schedule:
+    - cron: "0 */8 * * *"
+
+jobs:
+  updtpkg:
+    container: archlinux:base-devel
+    runs-on: ubuntu-latest
+    steps:
+      - run: |-
+          uname -a
+          mkdir ~/.ssh -p && cd /etc/pacman.d
+          echo -e 'Server = https://mirrors.dotsrc.org/archlinux/$repo/os/$arch' >> mirrorlist
+          echo -e 'Server = https://mirrors.kernel.org/archlinux/$repo/os/$arch' >> mirrorlist
+          tac mirrorlist > mirrorlist~ && mv mirrorlist{~,} && cd /etc
+          sed -r 's/^#(MAKEFLAGS)=.*/\1="-j`nproc`"/' -i makepkg.conf
+          sed -r 's/^#(PACKAGER)=.*/\1="Seele <seele@0h7z.com>"/'  -i makepkg.conf
+          pacman-key --init
+      - run: |-
+          pacman -Syu --noconfirm dbus-daemon-units git pacman-contrib
+          sed -r 's/\b(EUID)\s*==\s*0\b/\1 < -0/' -i /bin/makepkg
+          makepkg --version
+      - run: pacman -S --noconfirm apt debian-archive-keyring openssh
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          token: ${{ secrets.PAT }}
+      - run: |-
+          patch -d / -lp1  < makepkg.patch
+          echo 'deb https://deb.debian.org/debian unstable main' >> /etc/apt/sources.list
+          echo 'deb https://deb.debian.org/debian testing  main' >> /etc/apt/sources.list
+          echo 'deb https://deb.debian.org/debian stable   main' >> /etc/apt/sources.list
+          echo '${{ secrets.SSH_PUB }}'    > ~/.ssh/id_ecdsa.pub
+          echo '${{ secrets.SSH_KEY }}'    > ~/.ssh/id_ecdsa
+          chmod 600 ~/.ssh/* && apt update
+      - run: |-
+          mkdir .github/packages/iraf-bin -p
+          cd -- .github/packages/iraf-bin
+          apt list -a iraf 2> /dev/null || true
+          apt-cache show iraf/sid | tee package.txt
+          deb=$(cat package.txt | grep -Po '^Version: \K\S+')
+          cd - && cd iraf-bin
+          ver=$(cat PKGBUILD | grep -Po '^pkgver=\K\S+')
+          rel=$(cat PKGBUILD | grep -Po '^pkgrel=\K\S+')
+          [[ ${ver} != ${deb/[+-]*/} ]] && rel=1 && ver="${deb/[+-]*/}" || \
+          [[ ${deb} == $(cat PKGBUILD | grep -Po '^debver=\K\S+') ]] || ((rel++))
+          sed -re "s/^(debver)=.+/\1=$deb/" -i PKGBUILD
+          sed -re "s/^(pkgver)=.+/\1=$ver/" -i PKGBUILD
+          sed -re "s/^(pkgrel)=.+/\1=$rel/" -i PKGBUILD
+          updpkgsums && makepkg --printsrcinfo > .SRCINFO
+      - run: |-
+          mkdir .github/packages/xgterm-bin -p
+          cd -- .github/packages/xgterm-bin
+          apt list -a xgterm 2> /dev/null || true
+          apt-cache show xgterm/sid | tee package.txt
+          deb=$(cat package.txt | grep -Po '^Version: \K\S+')
+          cd - && cd xgterm-bin
+          ver=$(cat PKGBUILD | grep -Po '^pkgver=\K\S+')
+          rel=$(cat PKGBUILD | grep -Po '^pkgrel=\K\S+')
+          [[ ${ver} != ${deb/[+-]*/} ]] && rel=1 && ver="${deb/[+-]*/}" || \
+          [[ ${deb} == $(cat PKGBUILD | grep -Po '^debver=\K\S+') ]] || ((rel++))
+          sed -re "s/^(debver)=.+/\1=$deb/" -i PKGBUILD
+          sed -re "s/^(pkgver)=.+/\1=$ver/" -i PKGBUILD
+          sed -re "s/^(pkgrel)=.+/\1=$rel/" -i PKGBUILD
+          updpkgsums && makepkg --printsrcinfo > .SRCINFO
+      - run: |-
+          git version
+          git config --global commit.gpgsign true
+          git config --global gpg.format ssh
+          git config --global init.defaultbranch master
+          git config --global pull.rebase true
+          git config --global safe.directory "*"
+          git config --global user.email seele@0h7z.com
+          git config --global user.name Seele
+          git config --global user.signingkey ~/.ssh/id_ecdsa.pub
+          git add --all && git commit --allow-empty-message -m 'Update' || true
+          git pull -ftp && git push

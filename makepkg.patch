@@ -1,0 +1,23 @@
+ scripts/libmakepkg/integrity/generate_checksum.sh.in | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/libmakepkg/integrity/generate_checksum.sh.in b/scripts/libmakepkg/integrity/generate_checksum.sh.in
+index 9919d1a3..9e4376ab 100644
+--- a/usr/share/makepkg/integrity/generate_checksum.sh
++++ b/usr/share/makepkg/integrity/generate_checksum.sh
+@@ -78,11 +78,13 @@ generate_one_checksum() {
+ 				;;
+ 		esac
+ 
++		(( numsrc > 1 )) && (( idx == 0 )) && echo
++
+ 		# indent checksum on lines after the first
+-		printf "%*s%s" $(( idx ? indentsz : 0 )) '' "'$sum'"
++		(( numsrc > 1 )) && echo -n "\u09"; printf "%s" "\"$sum\""
+ 
+ 		# print a newline on lines before the last
+-		(( idx < (numsrc - 1) )) && echo
++		(( numsrc > 1 )) && echo
+ 	done
+ 
+ 	echo ")"
