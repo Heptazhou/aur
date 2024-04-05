@@ -1,7 +1,7 @@
 # Maintainer: Heptazhou <zhou at 0h7z dot com>
 
-pkgname=locale-mul_zz
 pkgname_=locale
+pkgname=$pkgname_-mul_zz
 url="https://github.com/0h7z/$pkgname_"
 pkgver_=$(curl -Is $url/releases/latest | grep -Po "^location:.+\/v\K\S+")
 pkgver=$(echo $pkgver_ | grep -Po ".+(?=-)")
@@ -11,7 +11,7 @@ arch=("any")
 # url
 license=("AGPL3")
 depends=("glibc")
-install="locale.install"
+install="$pkgname_.install"
 source=("$pkgname-v$pkgver_.tar.gz::$url/archive/v$pkgver_.tar.gz")
 sha256sums=("SKIP")
 pkgdir_="usr/share/i18n/locales"

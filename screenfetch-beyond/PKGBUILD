@@ -1,7 +1,7 @@
 # Maintainer: Heptazhou <zhou at 0h7z dot com>
 
-pkgname=screenfetch-beyond
 pkgname_=screenfetch
+pkgname=$pkgname_-beyond
 pkgver=3.9.1
 pkgrel=2
 pkgdesc="CLI bash script to show system/theme info in screenshots"

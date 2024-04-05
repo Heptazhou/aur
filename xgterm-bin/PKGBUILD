@@ -11,6 +11,7 @@ arch=("x86_64")
 url="https://github.com/iraf-community/$pkgbase_"
 url_="https://deb.debian.org/debian/pool/main/${pkgbase_:0:1}/$pkgbase_"
 license=("custom")
+options=(!debug)
 provides=("$pkgname_")
 conflicts=("$pkgname_")
 depends=("libxaw" "ncurses" "tcl" "xaw3d")

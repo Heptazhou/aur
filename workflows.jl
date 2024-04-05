@@ -96,9 +96,9 @@ const ACT_SYNC(pkgbase::StrOrSym) = ODict(
 const ACT_UPDT(dict::AbstractDict, rel::String) = ACT_RUN.("""
 	mkdir .github/packages/$pkg -p
 	cd -- .github/packages/$pkg
-	apt list -a $src 2> /dev/null || true
-	apt-cache show $src/$rel | tee package.txt
-	deb=\$(cat package.txt | grep -Po '^Version: \\K\\S+')
+	apt list -a $(join(src, " ")) 2> /dev/null || true
+	apt-cache show $(join(src .* "/$rel", " ")) | tee package.txt
+	deb=\$(cat package.txt | grep -Pom1 '^Version: \\K\\S+')
 	cd - && cd $pkg
 	ver=\$(cat PKGBUILD | grep -Po '^pkgver=\\K\\S+')
 	rel=\$(cat PKGBUILD | grep -Po '^pkgrel=\\K\\S+')
@@ -158,7 +158,7 @@ const JOB_UPDT(dict::AbstractDict, rel::String) = ODict(
 			echo 'deb $URL_DEB stable   main' >> /etc/apt/sources.list
 			echo '\${{ secrets.SSH_PUB }}'    > ~/.ssh/id_ecdsa.pub
 			echo '\${{ secrets.SSH_KEY }}'    > ~/.ssh/id_ecdsa
-			chmod 600 ~/.ssh/* && apt update"""
+			chmod 600 ~/.ssh/* && apt update  2> /dev/null"""
 		)
 		ACT_UPDT(dict, rel)
 		ACT_PUSH("Update")
@@ -231,7 +231,7 @@ const pkg = ODict(
 	["7-zip-full"]             => (1, 1, "23.01-4"),
 	["conda-zsh-completion"]   => (1, 0, "0.11-1"),
 	["glibc-linux4"]           => (1, 0, "2.38-1"),
-	["iraf-bin"]               => (1, 1, "2.17.1-4"),
+	["iraf-bin"]               => (1, 0, "2.17.1-5"),
 	["libcurl-julia-bin"]      => (1, 1, "1.10-1"),
 	["locale-mul_zz"]          => (1, 0, "2.0-3"),
 	["mingw-w64-zlib", "nsis"] => (1, 1, "3.09-1"),
@@ -251,5 +251,5 @@ const deb = ODict(
 	("iraf-bin")   => ["iraf", "iraf-noao"],
 	("xgterm-bin") => ["xgterm"],
 )
-updtpkg(LDict(deb.keys, first.(deb.vals)), "sid")
+updtpkg(deb, "sid")
 
