@@ -1,0 +1,32 @@
+Package: iraf
+Source: iraf (2.17.1-5)
+Version: 2.17.1-5+b1
+Installed-Size: 32285
+Maintainer: Debian Astro Team <debian-astro-maintainers@lists.alioth.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34), libcfitsio10t64 (>= 4.2.0~), libcurl4t64 (>= 7.16.2), libexpat1 (>= 2.0.1), libreadline8t64 (>= 6.0)
+Recommends: iraf-noao, saods9 | ximtool, xgterm | python3-pyraf | xterm
+Suggests: iraf-dev
+Description-en: Image Reduction and Analysis Facility
+ IRAF is the "Image Reduction and Analysis Facility". The main
+ IRAF distribution includes a good selection of programs for
+ general image processing and graphics.
+ .
+ Other external or layered packages are available for
+ applications such as data acquisition or handling data from other
+ observatories and wavelength regimes such as the Hubble Space
+ Telescope (optical), EUVE (extreme ultra-violet), or ROSAT and
+ AXAF (X-ray). These external packages are distributed separately
+ from the main IRAF distribution but can be easily installed.
+ The IRAF system also the programmable Command Language scripting
+ facility.
+Description-md5: 6c55b8d0405360237049c296582d2c11
+Multi-Arch: foreign
+Homepage: https://iraf-community.github.io
+Section: science
+Priority: optional
+Filename: pool/main/i/iraf/iraf_2.17.1-5+b1_amd64.deb
+Size: 7048736
+MD5sum: 94de580f7bc795a0df3a2897b6daa1f8
+SHA256: 444a4ce7f9a57b71766ead783f18de8f6a7ab35bbac53bfda7a1f4bbeed315bd
+

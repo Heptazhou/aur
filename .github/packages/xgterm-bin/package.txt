@@ -1,0 +1,26 @@
+Package: xgterm
+Source: x11iraf
+Version: 2.1+dfsg-2
+Installed-Size: 863
+Maintainer: Debian Astro Team <debian-astro-maintainers@lists.alioth.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34), libtcl8.6 (>= 8.6.0), libtinfo6 (>= 6), libx11-6, libxext6, libxmu6 (>= 2:1.1.3), libxpm4, libxt6t64, xaw3dg (>= 1.5+E-1)
+Recommends: xfonts-100dpi
+Suggests: iraf
+Description-en: Terminal emulator to work with IRAF
+ XGterm provides a Tek 4012 compatible graphics terminal emulation for
+ IRAF, plus a datastream driven widget server capability using the
+ Object Manager to provide full access to the underlying toolkit and
+ widget set. The Gterm graphics window operates almost identically to
+ the xterm Tek window, however there are extensions for implementing
+ full-screen cursors, imaging, area fills, colors, graphics erasure,
+ a "status line" and so on.
+Description-md5: b0eb7364a64f0f7bda77950cc9dba0ca
+Homepage: https://github.com/iraf-community/x11iraf
+Section: science
+Priority: optional
+Filename: pool/main/x/x11iraf/xgterm_2.1+dfsg-2_amd64.deb
+Size: 331372
+MD5sum: b9aa484a3147367999aa4390ac008bf9
+SHA256: 4e718bbef790d2d6787869bfd1fccbf1c3aef306f5522678d7e3026ed5426454
+
